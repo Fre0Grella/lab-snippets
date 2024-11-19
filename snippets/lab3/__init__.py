@@ -60,10 +60,14 @@ class Connection:
                 message = self.receive()
                 if message is None:
                     break
+                if message.endswith(PORT_ENCODE):
+                    self.on_event('broadcast-port', message.removesuffix(PORT_ENCODE))
+                if message.endswith(BRDC_ENCODE):
+                    self.on_event('add-port', message.removesuffix(BRDC_ENCODE))
                 if message.endswith(MSG_ENCODE):
                     self.on_event('message', message.removesuffix(MSG_ENCODE))
-                if message.endswith(JSON_ENCODE):
-                    self.on_event('update-list',message.removesuffix(JSON_ENCODE))
+                #if message.endswith(JSON_ENCODE):
+                    #self.on_event('update-list',message.removesuffix(JSON_ENCODE))
                 if message.endswith(EXIT_MESSAGE):
                     self.close(message)
         except Exception as e:
@@ -81,9 +85,16 @@ class Connection:
 
 class Client(Connection):
     def __init__(self, server_address, callback=None):
+        #print("just before connection..")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #print("sock created")
         sock.bind(address(port=0))
+        #print("sock binded")
+        
+        print(f"connecting..{server_address}")
         sock.connect(address(*server_address))
+        
+        print("sock connected")
         super().__init__(sock, callback)
 
 

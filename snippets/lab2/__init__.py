@@ -19,7 +19,7 @@ def address(ip='0.0.0.0:0', port=None):
 def message(text: str, sender: str, timestamp: datetime=None):
     if timestamp is None:
         timestamp = datetime.now()
-    return f"[{timestamp.isoformat()}] {sender}:\n\t{text}"
+    return f"{sender} [{timestamp.isoformat()}]:\n\t{text}"
 
 
 def local_ips():
